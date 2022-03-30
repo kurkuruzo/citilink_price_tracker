@@ -16,9 +16,9 @@ from sqlalchemy.orm import relationship
 
 class Price(Base):
 
-    __tablename__ = 'prices'
+    __tablename__ = 'price'
     id = Column(Integer, primary_key=True)
     price = Column(Integer)
     date = Column(DateTime)
-    product_id = Column(Integer, ForeignKey('products.id'))
-    # product = relationship("Product", back_populates="prices")
+    product_id = Column(Integer, ForeignKey('product.id'))
+    product = relationship("Product", back_populates="prices")
