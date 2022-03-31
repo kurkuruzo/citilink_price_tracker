@@ -20,11 +20,11 @@ logging.basicConfig(level=logging.DEBUG,
 console = logging.StreamHandler()
 console.setLevel(logging.INFO)
 console_format = logging.Formatter('%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
-# console.addFilter(logging.Filter('sqlalchemy'))
 console.setFormatter(console_format)
 logger = logging.getLogger('app')
 logger.addHandler(console)
 
+logger.info('Программа запущена')
 Base.metadata.create_all(engine)
 
 
@@ -99,13 +99,13 @@ def menu():
         elif option == '3':
             update_products()
         else:
-            logger.info("Вы ввели неправильный символ")
+            print("Вы ввели неправильный символ")
+    logger.info('Завершение работы...')
 
 
 def main():
     parser = init_argparse()
     args = parser.parse_args()
-    logger.info(args)
     # if args.menu:
     #     menu()
     if args.update:
