@@ -12,6 +12,7 @@ from database import session, Base, engine
 
 Base.metadata.create_all(engine)
 
+
 def init_argparse() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         usage="%(prog)s [OPTION] [URL]...",
@@ -19,6 +20,10 @@ def init_argparse() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "-m", "--menu",
+        action='store_true'
+    )
+    parser.add_argument(
+        "-u", "--update",
         action='store_true'
     )
     parser.add_argument('urls', nargs='*')
@@ -46,6 +51,19 @@ def add_product(urls: List):
                 price_handler.append_new_price(price)
                 session.commit()
 
+
+def update_products():
+    products_list = ProductOperations.get_all_products()
+    products_list_manager = MultipleProductsManager(products_list)
+    products_list_manager.check_for_price_updates()
+    session.commit()
+
+
+def print_all_products():
+    products_list = ProductOperations.get_all_products()
+    [print(product, sep="\n") for product in products_list]
+
+
 def menu():
     while True:
         option = input(
@@ -56,19 +74,15 @@ def menu():
             q - Выход
             """
         )
-        products_list = ProductOperations.get_all_products()
-
         if option == 'q':
             break
         elif option == '1':
             url = input("Введите url товара для отлсеживания\n")
             add_product(urls=[url])
         elif option == '2':
-            [print(product, sep="\n") for product in products_list]
+            print_all_products()
         elif option == '3':
-            products_list_manager = MultipleProductsManager(products_list)
-            products_list_manager.check_for_price_updates()
-            session.commit()
+            update_products()
         else:
             print("Вы ввели неправильный символ")
 
@@ -79,8 +93,12 @@ def main():
     print(args)
     # if args.menu:
     #     menu()
+    if args.update:
+        update_products()
+        return
     if args.urls:
         add_product(args.urls)
+        return
     else:
         menu()
 
