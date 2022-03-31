@@ -8,12 +8,12 @@ class PriceHandler:
         self.product = product
         print(f'Price handler initialized for product id {self.product.id}')
 
-    def update_price(self, new_price: int):
-        existing_price = self.product.prices[:-1]
-        if new_price != existing_price:
-            self.append_new_price(self.product)
+    # def update_price(self, new_price: int):
+    #     existing_price = self.product.prices[-1]
+    #     if new_price != existing_price:
+    #         self.append_new_price(self.product)
         
-        return self.product.prices
+    #     return self.product.prices
         
     def append_new_price(self, new_price: int) -> Price:
         new_price_obj = Price(price=new_price, product_id=self.product.id, date=datetime.now())
