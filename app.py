@@ -5,7 +5,6 @@ import logging
 from typing import List
 from models.product import Product
 from requests.exceptions import MissingSchema
-from services import general
 from services.price import PriceHandler
 from services.product import ProductOperations, MultipleProductsManager
 from sqlalchemy.exc import IntegrityError
