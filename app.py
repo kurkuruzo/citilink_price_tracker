@@ -1,6 +1,7 @@
 import argparse
 from datetime import datetime
 from json.tool import main
+import logging
 from typing import List
 from models.product import Product
 from requests.exceptions import MissingSchema
@@ -9,6 +10,20 @@ from services.price import PriceHandler
 from services.product import ProductOperations, MultipleProductsManager
 from sqlalchemy.exc import IntegrityError
 from database import session, Base, engine
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                    datefmt='%d-%m %H:%M',
+                    filename='app.log',
+                    filemode='w')
+
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+console_format = logging.Formatter('%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+# console.addFilter(logging.Filter('sqlalchemy'))
+console.setFormatter(console_format)
+logger = logging.getLogger('app')
+logger.addHandler(console)
 
 Base.metadata.create_all(engine)
 
@@ -38,13 +53,13 @@ def add_product(urls: List):
             session.flush()
         except IntegrityError as e:
             session.rollback()
-            print(e.args)
+            logger.info(e.args)
         else:
             product_handler = ProductOperations(product)
             try:
                 price = product_handler.get_name_and_price()['price']
             except MissingSchema as e:
-                print(f'Неправильный формат URL. {e.args}') 
+                logger.info(f'Неправильный формат URL. {e.args}') 
                 return
             else:
                 price_handler = PriceHandler(product=product)
@@ -84,13 +99,13 @@ def menu():
         elif option == '3':
             update_products()
         else:
-            print("Вы ввели неправильный символ")
+            logger.info("Вы ввели неправильный символ")
 
 
 def main():
     parser = init_argparse()
     args = parser.parse_args()
-    print(args)
+    logger.info(args)
     # if args.menu:
     #     menu()
     if args.update:

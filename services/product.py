@@ -1,3 +1,4 @@
+import logging
 from database import session
 from datetime import datetime
 from typing import List
@@ -5,6 +6,7 @@ from models.product import Product
 from services.general import Scrapping
 from services.price import PriceHandler
 
+logger = logging.getLogger('app')
 class ProductOperations:
     def __init__(self, product: Product) -> None:
         self.product = product
@@ -32,8 +34,6 @@ class ProductOperations:
     def get_price_from_soup(self, bs):
         price_element = bs.find(class_="ProductHeader__price-default_current-price")
         price_int = int(price_element.string.replace(" ", ""))
-        # price_handler = PriceHandler(self.product)
-        # price_handler.append_new_price(price_int)
         return price_int
     
     def get_name_from_soup(self, bs):

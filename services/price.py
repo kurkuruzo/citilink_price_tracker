@@ -1,12 +1,14 @@
 from datetime import datetime
+import logging
 from database import session
 from models.price import Price
 from models.product import Product
 
+logger = logging.getLogger('app')
 class PriceHandler:
     def __init__(self, product: Product) -> None:
         self.product = product
-        print(f'Price handler initialized for product id {self.product.id}')
+        logger.info(f'Price handler initialized for product id {self.product.id}')
 
     # def update_price(self, new_price: int):
     #     existing_price = self.product.prices[-1]
