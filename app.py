@@ -1,6 +1,5 @@
 import argparse
 from datetime import datetime
-from json.tool import main
 import logging
 from typing import List
 from models.product import Product
@@ -11,14 +10,17 @@ from sqlalchemy.exc import IntegrityError
 from database import session, Base, engine
 
 logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                    format='%(asctime)s %(name)-12s \
+                    %(levelname)-8s %(message)s',
                     datefmt='%d-%m %H:%M',
                     filename='app.log',
                     filemode='w')
 
 console = logging.StreamHandler()
 console.setLevel(logging.INFO)
-console_format = logging.Formatter('%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+console_format = logging.Formatter(
+    '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+)
 console.setFormatter(console_format)
 logger = logging.getLogger('app')
 logger.addHandler(console)
@@ -58,7 +60,7 @@ def add_product(urls: List):
             try:
                 price = product_handler.get_name_and_price()['price']
             except MissingSchema as e:
-                logger.info(f'Неправильный формат URL. {e.args}') 
+                logger.info(f'Неправильный формат URL. {e.args}')
                 return
             else:
                 price_handler = PriceHandler(product=product)
@@ -78,6 +80,12 @@ def print_all_products():
     [print(product, sep="\n") for product in products_list]
 
 
+def show_price_history():
+    products_list = ProductOperations.get_all_products()
+    products_list_manager = MultipleProductsManager(products_list)
+    return products_list_manager.get_price_history_for_products_list()
+
+
 def menu():
     while True:
         option = input(
@@ -85,18 +93,21 @@ def menu():
             1 - Добавить товар для отслеживания
             2 - Показать все товары
             3 - Обновить цены
+            4 - Показать историю цен
             q - Выход
             """
         )
         if option == 'q':
             break
         elif option == '1':
-            url = input("Введите url товара для отлсеживания\n")
+            url = input("Введите url товара для отлсеживания:  ")
             add_product(urls=[url])
         elif option == '2':
             print_all_products()
         elif option == '3':
             update_products()
+        elif option == '4':
+            print("\n-----\n".join(show_price_history()))
         else:
             print("Вы ввели неправильный символ")
     logger.info('Завершение работы...')
@@ -115,6 +126,7 @@ def main():
         return
     else:
         menu()
+
 
 if __name__ == "__main__":
     main()

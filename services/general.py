@@ -1,9 +1,16 @@
+from abc import ABC, abstractmethod
 from bs4 import BeautifulSoup
 import requests
+
+
+class PriceNotFoundError(Exception):
+    pass
+
 
 class Scraping:
     """Class for the scraping methods
     """
+
     def __init__(self, url: str) -> None:
         """
 
@@ -29,10 +36,13 @@ class Scraping:
         Returns:
             int: Price of the product on the page
         """
-        price_element = self.bs.find(class_="ProductHeader__price-default_current-price")
+        price_element = self.bs.find(
+            class_="ProductHeader__price-default_current-price")
+        if not price_element:
+            raise PriceNotFoundError('Цена не найдена')
         price_int = int(price_element.string.replace(" ", ""))
         return price_int
-    
+
     def get_name_from_soup(self) -> str:
         """Parces a name of a product from the page
 
@@ -42,3 +52,18 @@ class Scraping:
         name_element = self.bs.find(class_='ProductHeader__title')
         name = name_element.string.strip()
         return name
+
+
+class Printer(ABC):
+    @abstractmethod
+    def print():
+        pass
+
+
+class ConsolePrinter(Printer):
+    def __init__(self, object) -> None:
+        super().__init__()
+        self.object = object
+
+    def print(self):
+        print(self.object)

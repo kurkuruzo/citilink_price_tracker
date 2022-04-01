@@ -5,6 +5,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import DateTime
 from sqlalchemy.orm import relationship
 
+
 class Price(Base):
 
     __tablename__ = 'price'

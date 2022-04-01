@@ -5,6 +5,7 @@ from sqlalchemy import Integer
 from sqlalchemy import DateTime
 from sqlalchemy.orm import relationship
 
+
 class Product(Base):
     __tablename__ = 'product'
     id = Column(Integer(), primary_key=True)
@@ -14,7 +15,13 @@ class Product(Base):
     update_date = Column(DateTime)
 
     def __str__(self) -> str:
-        return f'<Product {self.name if self.name else "Имя не определено"}: цены {[pr.price for pr in self.prices] if self.prices else "Цены не определены"}, сохранена {self.update_date.isoformat() if self.update_date else "Дата не сохранена"}>'
+        name = self.name if self.name else "Имя не определено"
+        prices = [
+            pr.price for pr in self.prices
+        ] if self.prices else "Цены не определены"
+        date = {self.update_date.isoformat(
+        ) if self.update_date else "Дата не сохранена"}
+        return f'<Product {name}: цены {prices}, сохранена {date}>'
 
 
 class FileOperations:
