@@ -13,7 +13,7 @@ class PriceHandler:
 
     def __init__(self, product: Product) -> None:
         self.product = product
-        logger.info(
+        logger.debug(
             f'Price handler initialized for product id {self.product.id}')
 
     def append_new_price(self, new_price: int) -> Price:

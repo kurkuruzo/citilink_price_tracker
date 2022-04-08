@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.DEBUG,
                     %(levelname)-8s %(message)s',
                     datefmt='%d-%m %H:%M',
                     filename='app.log',
-                    filemode='w')
+                    filemode='a')
 
 console = logging.StreamHandler()
 console.setLevel(logging.INFO)

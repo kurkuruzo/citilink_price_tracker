@@ -34,7 +34,8 @@ class ProductOperations:
             new_price = self.get_price_from_site()
         except PriceNotFoundError as e:
             logger.warn(
-                f'Цена не найдена, скорее всего товар закончился\n {e.args}')
+                f'Цена не найдена, скорее всего товар закончился\n {e.args}\n\
+                    -------------------------------')
             return
         try:
             old_price = self.product.prices[-1].price
@@ -78,7 +79,7 @@ class ProductOperations:
 
     def get_price_history(self):
         prices = self.product.prices
-        return [f'Цена {pr.price} добавлена {pr.date}' for pr in prices]
+        return [f'Цена {pr.price} добавлена {pr.date.isoformat()}' for pr in prices]
 
 
 class MultipleProductsManager:
